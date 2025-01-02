@@ -6,12 +6,13 @@ export class Player {
     this.height = height;
     this.position = position;
 
+    this.vx = 1;
+    this.vy = 1;
     this.graphics = new Graphics();
     this.render();
   }
 
   render() {
-    // const plyer = new Graphics();
     this.graphics.rect(
       this.position.x,
       this.position.y,
