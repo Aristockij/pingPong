@@ -39,36 +39,41 @@ export async function setup(canvasRef) {
 
   state.ball.render();
 
-  const keyDownHandler = (e) => {
-    if (e.key == "ArrowRight") {
-      if (state.playerOne.position.x < 400) {
-        state.playerOne.updatePos(20);
-      }
-    } else if (e.key == "ArrowLeft") {
-      if (state.playerOne.position.x > 0) {
-        state.playerOne.updatePos(-20);
-      }
-    }
-  };
+  // right.release = () => {
+  //   if (!right.isDown) {
+  //     state.playerOne.updatePos(0);
+  //   }
+  // };
 
-  const keyDownHandlerSecondPlayer = (e) => {
-    if (e.key == "d") {
-      if (state.playerTwo.position.x < 400) {
-        state.playerTwo.updatePos(20);
-      }
-    } else if (e.key == "a") {
-      if (state.playerTwo.position.x > 0) {
-        state.playerTwo.updatePos(-20);
-      }
-    }
-  };
+  // left.release = () => {
+  //   if (!left.isDown) {
+  //     state.playerOne.updatePos(0);
+  //   }
+  // };
+
+  // const keyDownHandler = (e) => {
+  //   if (e.key == "ArrowRight") {
+  //     if (state.playerOne.position.x < 400) {
+  //       state.playerOne.updatePos(20);
+  //     }
+  //   } else if (e.key == "ArrowLeft") {
+  //     if (state.playerOne.position.x > 0) {
+  //       state.playerOne.updatePos(-20);
+  //     }
+  //   }
+  // };
+
+  // const keyDownHandlerSecondPlayer = (e) => {
+  //   if (e.key == "d") {
+  //     if (state.playerTwo.position.x < 400) {
+  //       state.playerTwo.updatePos(20);
+  //     }
+  //   } else if (e.key == "a") {
+  //     if (state.playerTwo.position.x > 0) {
+  //       state.playerTwo.updatePos(-20);
+  //     }
+  //   }
+  // };
 
   gameLoop();
-
-  document.addEventListener("keydown", keyDownHandler);
-  document.addEventListener("keydown", keyDownHandlerSecondPlayer);
-  return () => {
-    document.removeEventListener("keydown", keyDownHandler);
-    document.removeEventListener("keydown", keyDownHandlerSecondPlayer);
-  };
 }
