@@ -39,6 +39,33 @@ export async function setup(canvasRef) {
 
   state.ball.render();
 
+  const left = keyboard("ArrowLeft");
+  const right = keyboard("ArrowRight");
+
+  left.press = () => {
+    if (state.playerOne.position.x > 0) {
+      state.playerOne.updatePos(-1);
+    }
+  };
+
+  left.release = () => {
+    if (!left.isDown) {
+      state.playerOne.updatePos(0);
+    }
+  };
+
+  right.press = () => {
+    if (state.playerOne.position.x < 400) {
+      state.playerOne.updatePos(1);
+    }
+  };
+
+  right.release = () => {
+    if (!right.isDown) {
+      state.playerOne.updatePos(0);
+    }
+  };
+
   // right.release = () => {
   //   if (!right.isDown) {
   //     state.playerOne.updatePos(0);
