@@ -10,6 +10,7 @@ export class Player {
     this.vy = 1;
     this.graphics = new Graphics();
     this.render();
+    this.direction = 0;
   }
 
   render() {
@@ -22,14 +23,14 @@ export class Player {
     this.graphics.fill("#000");
   }
 
-  updatePos(deltaX) {
+  updatePos() {
     this.graphics.clear();
 
     if (this.position.x > 400) {
       this.position.x += 0;
     }
 
-    this.position.x += deltaX;
+    this.position.x += this.direction;
     this.render();
   }
 }

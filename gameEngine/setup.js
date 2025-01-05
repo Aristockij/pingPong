@@ -1,6 +1,7 @@
 import { Application } from "pixi.js";
 import { gameLoop } from "./gameLoop";
 import { state } from "./state";
+import { setupKeyHandlers } from "./setupKeyHandlers";
 
 export async function setup(canvasRef) {
   const app = new Application();
@@ -39,68 +40,8 @@ export async function setup(canvasRef) {
 
   state.ball.render();
 
-  const left = keyboard("ArrowLeft");
-  const right = keyboard("ArrowRight");
-
-  left.press = () => {
-    if (state.playerOne.position.x > 0) {
-      state.playerOne.updatePos(-1);
-    }
-  };
-
-  left.release = () => {
-    if (!left.isDown) {
-      state.playerOne.updatePos(0);
-    }
-  };
-
-  right.press = () => {
-    if (state.playerOne.position.x < 400) {
-      state.playerOne.updatePos(1);
-    }
-  };
-
-  right.release = () => {
-    if (!right.isDown) {
-      state.playerOne.updatePos(0);
-    }
-  };
-
-  // right.release = () => {
-  //   if (!right.isDown) {
-  //     state.playerOne.updatePos(0);
-  //   }
-  // };
-
-  // left.release = () => {
-  //   if (!left.isDown) {
-  //     state.playerOne.updatePos(0);
-  //   }
-  // };
-
-  // const keyDownHandler = (e) => {
-  //   if (e.key == "ArrowRight") {
-  //     if (state.playerOne.position.x < 400) {
-  //       state.playerOne.updatePos(20);
-  //     }
-  //   } else if (e.key == "ArrowLeft") {
-  //     if (state.playerOne.position.x > 0) {
-  //       state.playerOne.updatePos(-20);
-  //     }
-  //   }
-  // };
-
-  // const keyDownHandlerSecondPlayer = (e) => {
-  //   if (e.key == "d") {
-  //     if (state.playerTwo.position.x < 400) {
-  //       state.playerTwo.updatePos(20);
-  //     }
-  //   } else if (e.key == "a") {
-  //     if (state.playerTwo.position.x > 0) {
-  //       state.playerTwo.updatePos(-20);
-  //     }
-  //   }
-  // };
+  setupKeyHandlers(state.playerOne, "ArrowLeft", "ArrowRight", 10);
+  setupKeyHandlers(state.playerTwo, "a", "d", 10);
 
   gameLoop();
 }
