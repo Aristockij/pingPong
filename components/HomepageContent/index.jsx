@@ -1,4 +1,3 @@
-import s from "./index.module.scss";
 import Link from "next/link";
 
 const HomepageContent = () => {
