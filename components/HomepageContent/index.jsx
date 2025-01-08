@@ -5,6 +5,9 @@ const HomepageContent = () => {
     <section className={"container"}>
       <ul>
         <li>
+          <Link href='/local'>local game</Link>
+        </li>
+        <li>
           <Link href='/rooms'>game rooms</Link>
         </li>
         <li>

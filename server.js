@@ -13,8 +13,23 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
 
-  io.on("connection", (socket) => {
-    // console.log(socket);
+  io.on("connection", async (socket) => {
+    io.of("/").adapter.on("create-room", (room) => {
+      console.log(`room ${room} was created`);
+    });
+
+    io.of("/").adapter.on("join-room", (room, id) => {
+      console.log(`socket ${id} has joined room ${room}`);
+    });
+
+    socket.on("ping", () => {
+      console.log("we get a ping message");
+      socket.emit("pong", "hello world");
+    });
+
+    socket.on("pong", (message) => {
+      console.log("message");
+    });
   });
 
   httpServer
