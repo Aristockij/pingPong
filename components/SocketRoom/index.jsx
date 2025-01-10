@@ -6,51 +6,33 @@ import s from "./index.module.scss";
 const socket = io();
 
 const SocketRoom = () => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
-
   const [roomTitle, setRoomTitle] = useState("");
   const [roomPass, setRoomPass] = useState("");
 
+  const [rooms, setRooms] = useState({});
+
   useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
+    socket.on("rooms-updated", (updatedRooms) => {
+      console.log(updatedRooms);
 
-    function onConnect() {
-      setIsConnected(true);
-      setTransport(socket.io.engine.transport.name);
-
-      socket.io.engine.on("upgrade", (transport) => {
-        setTransport(transport.name);
-      });
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-      setTransport("N/A");
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-
+      setRooms(updatedRooms);
+    });
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
+      socket.off("rooms-updated");
     };
   }, []);
 
-  const pingSocket = () => {
-    socket.emit("ping");
+  const joinRoom = (roomName) => {
+    const password = prompt("Enter room password (if any):");
+    socket.emit("join-room", { roomName, password });
   };
 
   return (
     <div>
-      <button onClick={pingSocket}>ping</button>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(roomTitle, roomPass);
+          socket.emit("create-room", { roomTitle, roomPass });
         }}
       >
         <div className={s.field}>
@@ -77,8 +59,15 @@ const SocketRoom = () => {
         </button>
       </form>
 
-      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-      <p>Transport: {transport}</p>
+      <div>
+        {Object.entries(rooms).map(([roomName, roomData]) => (
+          <li key={roomName}>
+            {roomName} ({roomData.users.length} users)
+            {roomData.password && " 🔒"}
+            <button onClick={() => joinRoom(roomName)}>Join</button>
+          </li>
+        ))}
+      </div>
     </div>
   );
 };

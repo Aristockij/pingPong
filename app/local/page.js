@@ -1,8 +1,10 @@
 import Canvas from "@/components/Canvas";
+import Link from "next/link";
 
 const page = () => {
   return (
-    <div>
+    <div className='container'>
+      <Link href='/'>Home</Link>
       <Canvas />
     </div>
   );

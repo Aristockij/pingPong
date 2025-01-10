@@ -14,21 +14,55 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   io.on("connection", async (socket) => {
-    io.of("/").adapter.on("create-room", (room) => {
-      console.log(`room ${room} was created`);
+    const rooms = {};
+
+    socket.on("create-room", ({ roomName, pass }) => {
+      if (rooms[roomName]) {
+        socket.emit("room-error", "Room already exists");
+        return;
+      }
+
+      rooms[roomName] = {
+        pass,
+        users: [],
+      };
+
+      socket.join(roomName);
+      rooms[roomName].users.push(socket.id);
+
+      io.emit("rooms-updated", rooms);
+      socket.emit("room-created", roomName);
     });
 
-    io.of("/").adapter.on("join-room", (room, id) => {
-      console.log(`socket ${id} has joined room ${room}`);
+    socket.on("join-room", ({ roomName, pass }) => {
+      const room = rooms[roomName];
+      if (!room) {
+        socket.emit("room-error", "Room does not exist");
+        return;
+      }
+
+      if (room.password && room.password !== pass) {
+        socket.emit("room-error", "Incorrect password");
+        return;
+      }
+
+      socket.join(roomName);
+      room.users.push(socket.io);
+
+      io.to(roomName).emit("user-joined", { userId: socket.id });
+      io.emit("rooms-updated", rooms);
     });
 
-    socket.on("ping", () => {
-      console.log("we get a ping message");
-      socket.emit("pong", "hello world");
-    });
+    socket.on("disconnect", () => {
+      for (const [roomName, room] of Object.entries(rooms)) {
+        room.users = room.users.filter((id) => id !== socket.id);
 
-    socket.on("pong", (message) => {
-      console.log("message");
+        if (room.users.length === 0) {
+          delete rooms[roomName];
+        }
+      }
+
+      io.emit("rooms-updated", rooms);
     });
   });
 

@@ -1,7 +1,11 @@
 import HomepageContent from "@/components/HomepageContent";
 
 const Page = () => {
-  return <HomepageContent />;
+  return (
+    <>
+      <HomepageContent />
+    </>
+  );
 };
 
 export default Page;
