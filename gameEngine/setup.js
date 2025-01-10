@@ -1,47 +1,64 @@
 import { Application } from "pixi.js";
 import { gameLoop } from "./gameLoop";
+import { stopGameWithExit } from "./endGame";
 import { state } from "./state";
 import { setupKeyHandlers } from "./setupKeyHandlers";
 
+let app;
+
 export async function setup(canvasRef) {
-  const app = new Application();
-  await app.init({ background: "#000", resizeTo: window });
+  if (!app) app = new Application();
 
-  canvasRef.current.appendChild(app.canvas);
+  if (app) {
+    await app.init({ background: "#000", resizeTo: window });
 
-  state.graphicsBg.rect(0, 0, 600, 800);
-  state.graphicsBg.fill(0xde3249);
+    canvasRef.current.appendChild(app.canvas);
 
-  state.textOne.x = 600;
-  state.textOne.y = 300;
+    state.graphicsBg.rect(0, 0, 600, 800);
+    state.graphicsBg.fill(0xde3249);
 
-  state.textTwo.x = 600;
-  state.textTwo.y = 400;
+    state.textOne.x = 600;
+    state.textOne.y = 300;
 
-  state.winnerText.x = 80;
-  state.winnerText.y = state.graphicsBg.height / 2;
+    state.textTwo.x = 600;
+    state.textTwo.y = 400;
 
-  app.stage.addChild(state.container);
+    state.winnerText.x = 80;
+    state.winnerText.y = state.graphicsBg.height / 2;
 
-  state.container.addChild(
-    state.graphicsBg,
-    state.ball.graphics,
-    state.playerTwo.graphics,
-    state.playerOne.graphics,
-    state.textOne,
-    state.textTwo
-  );
+    app.stage.addChild(state.container);
 
-  state.container.x = app.screen.width / 2 - 300;
-  state.container.y = app.screen.height / 2 - 400;
+    state.container.addChild(
+      state.graphicsBg,
+      state.ball.graphics,
+      state.playerTwo.graphics,
+      state.playerOne.graphics,
+      state.textOne,
+      state.textTwo
+    );
 
-  state.container.width = 600;
-  state.container.height = 800;
+    state.container.x = app.screen.width / 2 - 300;
+    state.container.y = app.screen.height / 2 - 400;
 
-  state.ball.render();
+    state.container.width = 600;
+    state.container.height = 800;
 
-  setupKeyHandlers(state.playerOne, "ArrowLeft", "ArrowRight", 10);
-  setupKeyHandlers(state.playerTwo, "a", "d", 10);
+    state.ball.render();
+    state.playerTwo.render();
+    state.playerOne.render();
 
-  gameLoop();
+    setupKeyHandlers(state.playerOne, "ArrowLeft", "ArrowRight", 10);
+    setupKeyHandlers(state.playerTwo, "a", "d", 10);
+
+    gameLoop();
+  }
+}
+
+export function cleanup() {
+  if (app) {
+    stopGameWithExit();
+
+    app.destroy();
+    app = null;
+  }
 }

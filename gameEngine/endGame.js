@@ -76,3 +76,7 @@ export function endGame() {
     window.cancelAnimationFrame(state.game);
   }
 }
+
+export function stopGameWithExit() {
+  window.cancelAnimationFrame(state.game);
+}

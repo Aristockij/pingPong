@@ -16,53 +16,19 @@ app.prepare().then(() => {
   io.on("connection", async (socket) => {
     const rooms = {};
 
-    socket.on("create-room", ({ roomName, pass }) => {
-      if (rooms[roomName]) {
-        socket.emit("room-error", "Room already exists");
-        return;
-      }
+    socket.on("create-room", ({ roomTitle, roomPass }) => {
+      console.log(roomTitle, roomPass);
 
-      rooms[roomName] = {
-        pass,
+      rooms[roomTitle] = {
+        password: roomPass,
         users: [],
       };
 
-      socket.join(roomName);
-      rooms[roomName].users.push(socket.id);
+      socket.join(roomTitle);
+      rooms[roomTitle].users.push(socket.id);
 
-      io.emit("rooms-updated", rooms);
-      socket.emit("room-created", roomName);
-    });
-
-    socket.on("join-room", ({ roomName, pass }) => {
-      const room = rooms[roomName];
-      if (!room) {
-        socket.emit("room-error", "Room does not exist");
-        return;
-      }
-
-      if (room.password && room.password !== pass) {
-        socket.emit("room-error", "Incorrect password");
-        return;
-      }
-
-      socket.join(roomName);
-      room.users.push(socket.io);
-
-      io.to(roomName).emit("user-joined", { userId: socket.id });
-      io.emit("rooms-updated", rooms);
-    });
-
-    socket.on("disconnect", () => {
-      for (const [roomName, room] of Object.entries(rooms)) {
-        room.users = room.users.filter((id) => id !== socket.id);
-
-        if (room.users.length === 0) {
-          delete rooms[roomName];
-        }
-      }
-
-      io.emit("rooms-updated", rooms);
+      io.emit("update-rooms", rooms);
+      socket.emit("room-created", rooms);
     });
   });
 

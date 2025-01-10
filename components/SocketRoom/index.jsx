@@ -12,20 +12,18 @@ const SocketRoom = () => {
   const [rooms, setRooms] = useState({});
 
   useEffect(() => {
-    socket.on("rooms-updated", (updatedRooms) => {
-      console.log(updatedRooms);
-
-      setRooms(updatedRooms);
+    socket.on("update-rooms", (room) => {
+      setRooms(room);
     });
+
     return () => {
-      socket.off("rooms-updated");
+      socket.off("update-rooms", (room) => {
+        setRooms(room);
+      });
     };
   }, []);
 
-  const joinRoom = (roomName) => {
-    const password = prompt("Enter room password (if any):");
-    socket.emit("join-room", { roomName, password });
-  };
+  console.log(rooms);
 
   return (
     <div>
@@ -33,6 +31,9 @@ const SocketRoom = () => {
         onSubmit={(e) => {
           e.preventDefault();
           socket.emit("create-room", { roomTitle, roomPass });
+          socket.on("update-rooms", (rooms) => {
+            setRooms(rooms);
+          });
         }}
       >
         <div className={s.field}>
@@ -59,15 +60,7 @@ const SocketRoom = () => {
         </button>
       </form>
 
-      <div>
-        {Object.entries(rooms).map(([roomName, roomData]) => (
-          <li key={roomName}>
-            {roomName} ({roomData.users.length} users)
-            {roomData.password && " 🔒"}
-            <button onClick={() => joinRoom(roomName)}>Join</button>
-          </li>
-        ))}
-      </div>
+      <div></div>
     </div>
   );
 };
