@@ -1,9 +1,9 @@
-import SocketRoom from "@/components/SocketRoom";
+import PrivateRoom from "@/components/PrivateRoom";
 
 const page = () => {
   return (
     <section className='container'>
-      <SocketRoom />
+      <PrivateRoom />
     </section>
   );
 };

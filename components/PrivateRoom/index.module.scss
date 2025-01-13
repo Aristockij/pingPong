@@ -1,0 +1,21 @@
+.field {
+  input {
+    color: #000;
+  }
+  textarea: {
+    color: #000;
+    width: 100%;
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  & > div {
+    flex: 1;
+  }
+}
+
+.chat {
+  width: 600px;
+}

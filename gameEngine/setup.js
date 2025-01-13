@@ -9,56 +9,52 @@ let app;
 export async function setup(canvasRef) {
   if (!app) app = new Application();
 
-  if (app) {
-    await app.init({ background: "#000", resizeTo: window });
+  await app.init({ background: "#000", resizeTo: window });
 
-    canvasRef.current.appendChild(app.canvas);
+  canvasRef.current.appendChild(app.canvas);
 
-    state.graphicsBg.rect(0, 0, 600, 800);
-    state.graphicsBg.fill(0xde3249);
+  state.graphicsBg.rect(0, 0, 600, 800);
+  state.graphicsBg.fill(0xde3249);
 
-    state.textOne.x = 600;
-    state.textOne.y = 300;
+  state.textOne.x = 600;
+  state.textOne.y = 300;
 
-    state.textTwo.x = 600;
-    state.textTwo.y = 400;
+  state.textTwo.x = 600;
+  state.textTwo.y = 400;
 
-    state.winnerText.x = 80;
-    state.winnerText.y = state.graphicsBg.height / 2;
+  state.winnerText.x = 80;
+  state.winnerText.y = state.graphicsBg.height / 2;
 
-    app.stage.addChild(state.container);
+  app.stage.addChild(state.container);
 
-    state.container.addChild(
-      state.graphicsBg,
-      state.ball.graphics,
-      state.playerTwo.graphics,
-      state.playerOne.graphics,
-      state.textOne,
-      state.textTwo
-    );
+  state.container.addChild(
+    state.graphicsBg,
+    state.ball.graphics,
+    state.playerTwo.graphics,
+    state.playerOne.graphics,
+    state.textOne,
+    state.textTwo
+  );
 
-    state.container.x = app.screen.width / 2 - 300;
-    state.container.y = app.screen.height / 2 - 400;
+  state.container.x = app.screen.width / 2 - 300;
+  state.container.y = app.screen.height / 2 - 400;
 
-    state.container.width = 600;
-    state.container.height = 800;
+  state.container.width = 600;
+  state.container.height = 800;
 
-    state.ball.render();
-    state.playerTwo.render();
-    state.playerOne.render();
+  state.ball.render();
+  state.playerTwo.render();
+  state.playerOne.render();
 
-    setupKeyHandlers(state.playerOne, "ArrowLeft", "ArrowRight", 10);
-    setupKeyHandlers(state.playerTwo, "a", "d", 10);
+  setupKeyHandlers(state.playerOne, "ArrowLeft", "ArrowRight", 10);
+  setupKeyHandlers(state.playerTwo, "a", "d", 10);
 
-    gameLoop();
-  }
+  gameLoop();
 }
 
 export function cleanup() {
-  if (app) {
-    stopGameWithExit();
+  stopGameWithExit();
 
-    app.destroy();
-    app = null;
-  }
+  app.destroy();
+  app = null;
 }

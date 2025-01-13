@@ -1,5 +1,4 @@
-const page = (params) => {
-  console.log(params);
-  return <div>page</div>;
+const page = () => {
+  return <section className='container'>page</section>;
 };
 export default page;
