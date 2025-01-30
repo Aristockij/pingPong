@@ -1,5 +1,5 @@
 services:
-  matrixa-sudby-ru:
+  ping-pong-image:
     image: aristockij/ping-pong-image:latest
     container_name: ping-pong-image
     restart: always
