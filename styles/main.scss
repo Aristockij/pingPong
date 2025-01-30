@@ -12,3 +12,77 @@
     font-size: 1.3em;
   }
 }
+
+.chat {
+  &__wrap {
+    display: flex;
+    width: 100%;
+    padding: 0 1.5em;
+    height: calc(100vh - 100px);
+  }
+}
+
+.left-panel {
+  width: 300px;
+  border-right: 1px solid #fff;
+  margin-right: 20px;
+}
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  ul li {
+    margin-bottom: 10px;
+  }
+
+  ul {
+    max-height: calc(100vh - 200px);
+    overflow-y: scroll;
+  }
+}
+.sender {
+  background-color: rgb(79, 79, 255);
+  border-radius: 10px;
+  padding: 5px;
+  width: 70%;
+
+  &.yourself {
+    margin-left: auto;
+    background-color: rgb(156, 156, 255);
+  }
+}
+
+.form {
+  position: relative;
+  .send-button {
+    position: absolute;
+    background-color: blue;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding: 0 10px;
+  }
+  textarea {
+    height: 100%;
+    display: block;
+    padding: 4px 60px 4px 4px;
+  }
+}
+.user {
+  &__description {
+    display: flex;
+  }
+}
+.icon {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: #e38968;
+  margin-right: 6px;
+}
+
+.icon.connected {
+  background-color: #86bb71;
+}

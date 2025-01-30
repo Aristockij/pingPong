@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = 3000;
+const port = 4000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
@@ -13,12 +13,12 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: `http://${hostname}:${port}`,
     },
   });
 
   io.use((socket, middlewareNext) => {
-    const username = socket.handshake.auth.userName;
+    const username = socket.handshake.auth.username;
 
     if (!username) {
       return middlewareNext(new Error("invalid username"));
@@ -29,9 +29,10 @@ app.prepare().then(() => {
 
   io.on("connection", async (socket) => {
     const users = [];
+
     for (let [id, socket] of io.of("/").sockets) {
       users.push({
-        userId: id,
+        userID: id,
         username: socket.username,
       });
     }
@@ -47,51 +48,12 @@ app.prepare().then(() => {
         content,
         from: socket.id,
       });
+      console.log(content);
     });
 
     socket.on("disconnect", () => {
       socket.broadcast.emit("user disconnected", socket.id);
     });
-
-    // const rooms = {};
-    // socket.on("create-room", ({ roomTitle, roomPass }) => {
-    //   if (rooms[roomTitle]) {
-    //     socket.emit("room-error", "Room already exist");
-    //     return;
-    //   }
-    //   rooms[roomTitle] = {
-    //     password: roomPass,
-    //     users: [],
-    //   };
-    //   socket.join(roomTitle);
-    //   rooms[roomTitle].users.push(socket.id);
-    //   io.emit("update-rooms", rooms);
-    //   socket.emit("rooms-created", roomTitle);
-    // });
-    // socket.on("join-room", ({ roomTitle, password }) => {
-    //   const room = rooms[roomName];
-    //   if (!room) {
-    //     socket.emit("room-error", "Room does not exist");
-    //     return;
-    //   }
-    //   if (room.password && room.password !== password) {
-    //     socket.emit("room-error", "Incorrect password");
-    //     return;
-    //   }
-    //   socket.join(roomTitle);
-    //   room.users.push(socket.id);
-    //   io.to(roomTitle).emit("user-joined", { userId: socket.id });
-    //   io.emit("rooms-updated", rooms);
-    // });
-    // socket.on("disconnect", () => {
-    //   for (const [roomTitle, room] of Object.entries(rooms)) {
-    //     room.users = room.users.filter((id) => id !== socket.id);
-    //     if (room.users.length === 0) {
-    //       delete rooms[roomTitle];
-    //     }
-    //   }
-    //   io.emit("rooms-updated", rooms);
-    // });
   });
 
   httpServer
